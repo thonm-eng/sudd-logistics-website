@@ -1312,6 +1312,7 @@ footer ul .mono { font-size: .76rem; letter-spacing: .1em; color: #5E7A98; }
       <a href="#about"    data-go="about">About</a>
       <a href="#contact"  data-go="contact">Contact</a>
       <a href="#quote"    data-go="quote" class="btn btn-gold btn-sm">Get a Quote →</a>
+      <a href="#portal"   data-go="portal" class="btn btn-sm" style="background:rgba(255,255,255,.07);color:#B8CCE2;border:1px solid rgba(255,255,255,.18);margin-left:4px">Client Login</a>
     </nav>
   </div>
 </header>
@@ -2023,6 +2024,368 @@ footer ul .mono { font-size: .76rem; letter-spacing: .1em; color: #5E7A98; }
 
 
 <!-- ══ Footer ══════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════╗
+     ║           CLIENT PORTAL VIEW             ║
+     ╚══════════════════════════════════════════╝ -->
+<main id="view-portal" class="view">
+
+  <!-- Auth forms (login / signup / reset) -->
+  <div id="portal-auth-wrap" style="min-height:100vh;background:linear-gradient(155deg,var(--navy-9) 0%,var(--navy-7) 100%);display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden">
+    <!-- bg grid -->
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:50px 50px;pointer-events:none"></div>
+
+    <div style="width:100%;max-width:420px;position:relative">
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:32px">
+        <div style="font-family:var(--mono);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">SUDD Logistics Limited</div>
+        <h1 style="font-family:var(--disp);font-size:2rem;font-weight:800;text-transform:uppercase;color:#fff;letter-spacing:.06em">Client Portal</h1>
+        <p style="color:#5E7A98;font-size:.88rem;margin-top:7px">Track shipments &amp; manage your account</p>
+      </div>
+
+      <!-- TAB switcher -->
+      <div style="display:flex;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:4px;margin-bottom:24px" id="portal-tabs">
+        <button class="portal-tab active" id="tab-login"  onclick="portalShowTab('login')"  style="flex:1;font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:9px;border-radius:5px;border:none;cursor:pointer;transition:all .15s;background:var(--gold);color:var(--navy-9)">Sign In</button>
+        <button class="portal-tab"        id="tab-signup" onclick="portalShowTab('signup')" style="flex:1;font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:9px;border-radius:5px;border:none;cursor:pointer;transition:all .15s;background:transparent;color:#8FA8C5">Create Account</button>
+      </div>
+
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(232,163,61,.2);border-radius:14px;padding:30px">
+
+        <!-- LOGIN FORM -->
+        <div id="portal-login-form">
+          <div class="field" style="margin-bottom:15px">
+            <label for="pl-email" style="color:#8FA8C5">Email address</label>
+            <input id="pl-email" type="email" placeholder="your@email.com" autocomplete="email"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:6px">
+            <label for="pl-pass" style="color:#8FA8C5">Password</label>
+            <input id="pl-pass" type="password" placeholder="••••••••" autocomplete="current-password"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <p style="text-align:right;margin-bottom:18px">
+            <a href="#" onclick="portalShowTab('reset');return false" style="font-family:var(--mono);font-size:.68rem;color:#5E7A98;letter-spacing:.08em">Forgot password?</a>
+          </p>
+          <button class="btn btn-gold" id="pl-btn" onclick="portalLogin()" style="width:100%;justify-content:center">Sign in →</button>
+          <div id="pl-error" style="display:none;margin-top:12px;padding:11px 14px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:7px;color:#E06C5A;font-size:.86rem"></div>
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="portal-signup-form" style="display:none">
+          <div class="field" style="margin-bottom:14px">
+            <label for="ps-name" style="color:#8FA8C5">Full name *</label>
+            <input id="ps-name" type="text" placeholder="Your full name" autocomplete="name"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label for="ps-company" style="color:#8FA8C5">Company name</label>
+            <input id="ps-company" type="text" placeholder="Your company (optional)"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label for="ps-phone" style="color:#8FA8C5">Phone / WhatsApp</label>
+            <input id="ps-phone" type="tel" placeholder="+254 7XX XXX XXX"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label for="ps-email" style="color:#8FA8C5">Email address *</label>
+            <input id="ps-email" type="email" placeholder="your@email.com" autocomplete="email"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:6px">
+            <label for="ps-pass" style="color:#8FA8C5">Password * (min 8 characters)</label>
+            <input id="ps-pass" type="password" placeholder="Create a strong password" autocomplete="new-password"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <p style="font-size:.76rem;color:#3A5570;margin-bottom:18px;line-height:1.5">
+            By creating an account you agree to SUDD Logistics' terms of service. Your account gives you access to shipment tracking and quote history.
+          </p>
+          <button class="btn btn-gold" id="ps-btn" onclick="portalSignup()" style="width:100%;justify-content:center">Create account →</button>
+          <div id="ps-error" style="display:none;margin-top:12px;padding:11px 14px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:7px;color:#E06C5A;font-size:.86rem"></div>
+          <div id="ps-success" style="display:none;margin-top:12px;padding:11px 14px;background:rgba(29,168,118,.12);border:1px solid rgba(29,168,118,.3);border-radius:7px;color:#1DA876;font-size:.86rem"></div>
+        </div>
+
+        <!-- RESET FORM -->
+        <div id="portal-reset-form" style="display:none">
+          <p style="color:#8FA8C5;font-size:.9rem;margin-bottom:18px;line-height:1.6">Enter your email address and we'll send you a link to reset your password.</p>
+          <div class="field" style="margin-bottom:18px">
+            <label for="pr-email" style="color:#8FA8C5">Email address</label>
+            <input id="pr-email" type="email" placeholder="your@email.com"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <button class="btn btn-gold" id="pr-btn" onclick="portalReset()" style="width:100%;justify-content:center">Send reset link →</button>
+          <p style="margin-top:14px;text-align:center">
+            <a href="#" onclick="portalShowTab('login');return false" style="font-family:var(--mono);font-size:.7rem;color:#5E7A98;letter-spacing:.08em">← Back to sign in</a>
+          </p>
+          <div id="pr-msg" style="display:none;margin-top:12px;padding:11px 14px;border-radius:7px;font-size:.86rem"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Dashboard (shown after login) -->
+  <div id="portal-dashboard-wrap" style="display:none;min-height:100vh;background:var(--grey-1)">
+
+    <!-- Portal top bar -->
+    <div style="background:var(--navy-9);border-bottom:2px solid var(--gold);position:sticky;top:70px;z-index:90">
+      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;height:58px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)">Client Portal</span>
+          <span style="width:1px;height:18px;background:rgba(255,255,255,.1)"></span>
+          <span id="portal-welcome" style="font-family:var(--mono);font-size:.7rem;color:#5E7A98;letter-spacing:.08em"></span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <a href="#tracking" data-go="tracking" class="btn btn-sm" style="background:rgba(255,255,255,.06);color:#B8CCE2;border:1px solid rgba(255,255,255,.12);font-size:.78rem;padding:7px 13px">Track Shipment</a>
+          <a href="#quote" data-go="quote" class="btn btn-gold btn-sm" style="font-size:.78rem;padding:7px 13px">Get Quote</a>
+          <button id="portal-logout-btn" class="btn btn-sm" style="background:rgba(255,255,255,.06);color:#8FA8C5;border:1px solid rgba(255,255,255,.12);padding:7px 13px;font-size:.78rem">Sign out</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap" style="padding-top:36px;padding-bottom:64px">
+
+      <!-- Welcome banner -->
+      <div style="background:linear-gradient(135deg,var(--navy-8),var(--navy-6));border-radius:var(--rad-lg);padding:28px 32px;margin-bottom:28px;border:1px solid rgba(232,163,61,.2);position:relative;overflow:hidden">
+        <div style="position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.12">🚢</div>
+        <span style="font-family:var(--mono);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)">Welcome back</span>
+        <h2 id="portal-name-display" style="font-family:var(--disp);font-size:1.8rem;font-weight:700;text-transform:uppercase;color:#fff;margin:6px 0 8px;letter-spacing:.06em">—</h2>
+        <p style="color:#8FA8C5;font-size:.88rem">Your account is active. Track shipments, request quotes or update your profile below.</p>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px">
+        <a href="#tracking" data-go="tracking" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:22px;display:flex;gap:14px;align-items:center;transition:all .18s;text-decoration:none;color:var(--ink)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.borderColor='var(--grey-2)';this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:1.6rem">🔍</span>
+          <div><b style="font-family:var(--disp);font-size:1rem;text-transform:uppercase;letter-spacing:.06em;display:block">Track Shipment</b><span style="font-size:.8rem;color:var(--slate)">Enter container or BL</span></div>
+        </a>
+        <a href="#quote" data-go="quote" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:22px;display:flex;gap:14px;align-items:center;transition:all .18s;text-decoration:none;color:var(--ink)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.borderColor='var(--grey-2)';this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:1.6rem">📋</span>
+          <div><b style="font-family:var(--disp);font-size:1rem;text-transform:uppercase;letter-spacing:.06em;display:block">Request Quote</b><span style="font-size:.8rem;color:var(--slate)">Get an all-in price</span></div>
+        </a>
+        <a href="https://wa.me/254745421430?text=Hello%20SUDD%20Logistics" target="_blank" rel="noopener" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:22px;display:flex;gap:14px;align-items:center;transition:all .18s;text-decoration:none;color:var(--ink)" onmouseover="this.style.borderColor='#25D366';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.borderColor='var(--grey-2)';this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:1.6rem">💬</span>
+          <div><b style="font-family:var(--disp);font-size:1rem;text-transform:uppercase;letter-spacing:.06em;display:block">WhatsApp Us</b><span style="font-size:.8rem;color:var(--slate)">Fastest response</span></div>
+        </a>
+        <a href="mailto:operations@suddlogistics.com" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:22px;display:flex;gap:14px;align-items:center;transition:all .18s;text-decoration:none;color:var(--ink)" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.borderColor='var(--grey-2)';this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:1.6rem">✉</span>
+          <div><b style="font-family:var(--disp);font-size:1rem;text-transform:uppercase;letter-spacing:.06em;display:block">Email Operations</b><span style="font-size:.8rem;color:var(--slate)">operations@suddlogistics.com</span></div>
+        </a>
+      </div>
+
+      <!-- Account details + update -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+
+        <!-- Profile card -->
+        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:28px">
+          <h3 style="font-family:var(--disp);font-size:1.1rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px">Account Details</h3>
+          <div id="portal-profile-view">
+            <div style="display:grid;gap:1px;background:var(--grey-2);border:1px solid var(--grey-2);border-radius:8px;overflow:hidden;margin-bottom:18px">
+              <div style="display:grid;grid-template-columns:100px 1fr;background:#fff"><div style="padding:11px 14px;background:var(--grey-1);font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);border-right:1px solid var(--grey-2)">Name</div><div style="padding:11px 14px;font-size:.92rem" id="pv-name">—</div></div>
+              <div style="display:grid;grid-template-columns:100px 1fr;background:#fff"><div style="padding:11px 14px;background:var(--grey-1);font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);border-right:1px solid var(--grey-2)">Company</div><div style="padding:11px 14px;font-size:.92rem" id="pv-company">—</div></div>
+              <div style="display:grid;grid-template-columns:100px 1fr;background:#fff"><div style="padding:11px 14px;background:var(--grey-1);font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);border-right:1px solid var(--grey-2)">Email</div><div style="padding:11px 14px;font-size:.92rem" id="pv-email">—</div></div>
+              <div style="display:grid;grid-template-columns:100px 1fr;background:#fff"><div style="padding:11px 14px;background:var(--grey-1);font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);border-right:1px solid var(--grey-2)">Phone</div><div style="padding:11px 14px;font-size:.92rem" id="pv-phone">—</div></div>
+            </div>
+            <button onclick="showProfileEdit()" class="btn btn-outline btn-sm">Edit profile</button>
+          </div>
+          <div id="portal-profile-edit" style="display:none">
+            <div class="field" style="margin-bottom:12px"><label>Full name</label><input id="pe-name" type="text"></div>
+            <div class="field" style="margin-bottom:12px"><label>Company</label><input id="pe-company" type="text"></div>
+            <div class="field" style="margin-bottom:18px"><label>Phone / WhatsApp</label><input id="pe-phone" type="tel"></div>
+            <div style="display:flex;gap:10px">
+              <button onclick="saveProfile()" class="btn btn-gold btn-sm" id="pe-save-btn">Save changes</button>
+              <button onclick="cancelProfileEdit()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2)">Cancel</button>
+            </div>
+            <div id="pe-msg" style="display:none;margin-top:10px;padding:10px 14px;border-radius:7px;font-size:.86rem"></div>
+          </div>
+        </div>
+
+        <!-- Change password -->
+        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:28px">
+          <h3 style="font-family:var(--disp);font-size:1.1rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px">Change Password</h3>
+          <div class="field" style="margin-bottom:12px"><label for="cp-new">New password</label><input id="cp-new" type="password" placeholder="Min 8 characters"></div>
+          <div class="field" style="margin-bottom:18px"><label for="cp-confirm">Confirm password</label><input id="cp-confirm" type="password" placeholder="Repeat new password"></div>
+          <button onclick="changePassword()" class="btn btn-navy btn-sm" id="cp-btn">Update password</button>
+          <div id="cp-msg" style="display:none;margin-top:10px;padding:10px 14px;border-radius:7px;font-size:.86rem"></div>
+        </div>
+
+      </div>
+
+      <!-- Info strip -->
+      <div style="background:var(--navy-8);border-radius:var(--rad);padding:22px 28px;margin-top:22px;border:1px solid rgba(232,163,61,.2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+          <p style="font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Need help?</p>
+          <p style="color:#8FA8C5;font-size:.88rem">Our operations team is available Mon–Sat 08:00–18:00 EAT. Cargo emergencies answered 24/7.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="tel:+254745421430" class="btn btn-sm btn-ghost" style="font-size:.82rem">📞 +254 745 421 430</a>
+          <a href="https://wa.me/254745421430" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;border:none;font-size:.82rem">💬 WhatsApp</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║              ADMIN VIEW                  ║
+     ╚══════════════════════════════════════════╝ -->
+<main id="view-admin" class="view">
+  <!-- Login Screen -->
+  <div id="admin-login-wrap">
+    <div style="min-height:100vh;background:var(--navy-9);display:flex;align-items:center;justify-content:center;padding:24px">
+      <div style="width:100%;max-width:400px">
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">SUDD Logistics</div>
+          <h1 style="font-family:var(--disp);font-size:2.2rem;font-weight:800;text-transform:uppercase;color:#fff;letter-spacing:.06em">Admin Portal</h1>
+          <p style="color:#5E7A98;font-size:.9rem;margin-top:8px">Sign in to manage quote submissions</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(232,163,61,.2);border-radius:14px;padding:32px">
+          <div class="field" style="margin-bottom:16px">
+            <label for="admin-email" style="color:#8FA8C5">Email address</label>
+            <input id="admin-email" type="email" placeholder="operations@suddlogistics.com"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <div class="field" style="margin-bottom:22px">
+            <label for="admin-password" style="color:#8FA8C5">Password</label>
+            <input id="admin-password" type="password" placeholder="••••••••"
+              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+          </div>
+          <button class="btn btn-gold" id="admin-login-btn" style="width:100%;justify-content:center" type="button">
+            Sign in →
+          </button>
+          <div id="admin-login-error" style="display:none;margin-top:14px;padding:12px 16px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;color:#E06C5A;font-size:.88rem"></div>
+        </div>
+        <p style="text-align:center;margin-top:18px;font-size:.78rem;color:#3A5570">
+          Forgot password? Contact your system administrator.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard (shown after login) -->
+  <div id="admin-dashboard-wrap" style="display:none">
+    <!-- Admin top bar -->
+    <div style="background:var(--navy-9);border-bottom:2px solid var(--gold);padding:0">
+      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;height:64px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)">Admin Dashboard</span>
+          <span style="width:1px;height:20px;background:rgba(255,255,255,.1)"></span>
+          <span style="font-family:var(--mono);font-size:.7rem;color:#5E7A98;letter-spacing:.1em">SUDD LOGISTICS LIMITED</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span id="admin-user-email" style="font-family:var(--mono);font-size:.72rem;color:#5E7A98"></span>
+          <button id="admin-logout-btn" class="btn btn-sm" style="background:rgba(255,255,255,.06);color:#8FA8C5;border:1px solid rgba(255,255,255,.12);padding:7px 14px;font-size:.78rem">
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--grey-1);min-height:calc(100vh - 64px);padding:36px 0">
+      <div class="wrap">
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px" id="admin-stats-row">
+          <div class="admin-stat-card" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
+            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">Total Submissions</span>
+            <b id="stat-total" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--navy-8)">—</b>
+          </div>
+          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
+            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">This Week</span>
+            <b id="stat-week" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--navy-8)">—</b>
+          </div>
+          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
+            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">Quote Requests</span>
+            <b id="stat-quotes" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--gold)">—</b>
+          </div>
+          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
+            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">General Enquiries</span>
+            <b id="stat-enquiries" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--ok)">—</b>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:16px 20px;margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <input id="admin-search" placeholder="🔍  Search name, email, cargo, destination…"
+            style="flex:1;min-width:200px;font-family:var(--body);font-size:.95rem;padding:10px 14px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);outline:none"
+            oninput="adminFilterRender()">
+          <select id="admin-filter-type" onchange="adminFilterRender()"
+            style="font-family:var(--mono);font-size:.78rem;padding:10px 12px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);letter-spacing:.06em">
+            <option value="">All types</option>
+            <option value="quote">Quote requests</option>
+            <option value="enquiry">General enquiries</option>
+          </select>
+          <select id="admin-filter-period" onchange="adminFilterRender()"
+            style="font-family:var(--mono);font-size:.78rem;padding:10px 12px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);letter-spacing:.06em">
+            <option value="">All time</option>
+            <option value="today">Today</option>
+            <option value="week">This week</option>
+            <option value="month">This month</option>
+          </select>
+          <button onclick="adminExportCSV()" class="btn btn-sm btn-navy" style="white-space:nowrap">
+            ⬇ Export CSV
+          </button>
+          <button onclick="adminLoadData()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2)">
+            ↻ Refresh
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);overflow:hidden">
+          <div id="admin-loading" style="padding:48px;text-align:center;color:var(--slate);font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase">
+            Loading submissions…
+          </div>
+          <div id="admin-empty" style="display:none;padding:64px 24px;text-align:center">
+            <div style="font-size:2.5rem;margin-bottom:14px">📭</div>
+            <p style="color:var(--slate);font-size:.95rem">No submissions match your filters.</p>
+          </div>
+          <div style="overflow-x:auto">
+            <table id="admin-table" style="width:100%;border-collapse:collapse;display:none">
+              <thead>
+                <tr style="background:var(--grey-1);border-bottom:2px solid var(--grey-2)">
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);white-space:nowrap">Date</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Name</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Contact</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Type</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Cargo / Subject</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Route</th>
+                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Status</th>
+                  <th style="padding:13px 16px;text-align:center;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-tbody"></tbody>
+            </table>
+          </div>
+          <div id="admin-pagination" style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--grey-2);display:none">
+            <span id="admin-page-info" style="font-family:var(--mono);font-size:.72rem;color:var(--slate);letter-spacing:.08em"></span>
+            <div style="display:flex;gap:8px">
+              <button id="admin-prev" onclick="adminChangePage(-1)" class="btn btn-sm btn-outline" style="padding:7px 14px">← Prev</button>
+              <button id="admin-next" onclick="adminChangePage(1)"  class="btn btn-sm btn-outline" style="padding:7px 14px">Next →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Detail modal -->
+    <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(6,20,34,.75);backdrop-filter:blur(6px);padding:24px;overflow-y:auto" onclick="if(event.target===this)closeAdminModal()">
+      <div style="background:#fff;border-radius:var(--rad-lg);max-width:640px;margin:0 auto;overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:var(--navy-8);padding:22px 28px;display:flex;justify-content:space-between;align-items:center">
+          <h3 style="font-family:var(--disp);font-size:1.2rem;letter-spacing:.1em;text-transform:uppercase;color:#fff">Submission Detail</h3>
+          <button onclick="closeAdminModal()" style="background:none;border:none;color:#8FA8C5;font-size:1.4rem;cursor:pointer;line-height:1">×</button>
+        </div>
+        <div id="admin-modal-body" style="padding:28px"></div>
+        <div style="padding:18px 28px;border-top:1px solid var(--grey-2);display:flex;gap:10px;flex-wrap:wrap">
+          <a id="modal-email-btn" href="#" class="btn btn-gold btn-sm">✉ Reply by Email</a>
+          <a id="modal-wa-btn" href="#" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff">💬 WhatsApp</a>
+          <button id="modal-delete-btn" class="btn btn-sm" style="background:rgba(192,57,43,.1);color:var(--err);border:1px solid rgba(192,57,43,.25);margin-left:auto">🗑 Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <footer>
   <div class="wrap foot-grid">
     <div class="foot-logo-desc">
@@ -2111,10 +2474,22 @@ function revealScan() {
 }
 
 /* ── SPA router ── */
-const VIEWS = ['home','services','tracking','quote','about','contact'];
+const VIEWS = ['home','services','tracking','quote','about','contact','admin','portal'];
 
 function go(v) {
   if (!VIEWS.includes(v)) v = 'home';
+  // Admin requires auth check
+  if (v === 'admin') {
+    VIEWS.forEach(x => document.getElementById('view-'+x).classList.toggle('active', x === v));
+    document.querySelectorAll('nav.menu a[data-go]').forEach(a =>
+      a.classList.toggle('active', a.dataset.go === v)
+    );
+    document.getElementById('menu').classList.remove('open');
+    document.getElementById('burger').setAttribute('aria-expanded', 'false');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    checkAdminSession();
+    return;
+  }
   VIEWS.forEach(x => document.getElementById('view-'+x).classList.toggle('active', x === v));
   document.querySelectorAll('nav.menu a[data-go]').forEach(a =>
     a.classList.toggle('active', a.dataset.go === v)
@@ -2131,8 +2506,12 @@ function go(v) {
     quote: 'Request a Quote — SUDD Logistics Limited',
     about: 'About Us — SUDD Logistics Limited',
     contact: 'Contact — SUDD Logistics Limited',
+    portal: 'Client Portal — SUDD Logistics Limited',
+    admin: 'SUDD Logistics Limited',
   };
   document.title = titles[v] || titles.home;
+  // Portal: check session
+  if (v === 'portal') { setTimeout(checkPortalSession, 60); }
 }
 
 document.addEventListener('click', e => {
@@ -2467,6 +2846,351 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
     btn.textContent = 'Send message →';
   }
 });
+
+/* ════════════════════════════════════════════
+   CLIENT PORTAL
+════════════════════════════════════════════ */
+
+function portalShowTab(tab) {
+  ['login','signup','reset'].forEach(t => {
+    document.getElementById('portal-'+t+'-form').style.display = t === tab ? 'block' : 'none';
+  });
+  ['login','signup'].forEach(t => {
+    const btn = document.getElementById('tab-'+t);
+    if (!btn) return;
+    const active = t === tab || (tab === 'reset' && t === 'login');
+    btn.style.background = active ? 'var(--gold)' : 'transparent';
+    btn.style.color = active ? 'var(--navy-9)' : '#8FA8C5';
+  });
+}
+
+async function checkPortalSession() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    await portalLoadAndShow(session.user);
+  } else {
+    document.getElementById('portal-auth-wrap').style.display = 'flex';
+    document.getElementById('portal-dashboard-wrap').style.display = 'none';
+  }
+}
+
+async function portalLoadAndShow(user) {
+  document.getElementById('portal-auth-wrap').style.display = 'none';
+  document.getElementById('portal-dashboard-wrap').style.display = 'block';
+
+  // Load profile metadata
+  const meta = user.user_metadata || {};
+  const name    = meta.full_name || user.email.split('@')[0];
+  const company = meta.company_name || '';
+  const phone   = meta.phone || '';
+
+  document.getElementById('portal-welcome').textContent   = user.email;
+  document.getElementById('portal-name-display').textContent = name;
+  document.getElementById('pv-name').textContent    = name;
+  document.getElementById('pv-company').textContent = company || '—';
+  document.getElementById('pv-email').textContent   = user.email;
+  document.getElementById('pv-phone').textContent   = phone || '—';
+
+  // Pre-fill edit fields
+  document.getElementById('pe-name').value    = name;
+  document.getElementById('pe-company').value = company;
+  document.getElementById('pe-phone').value   = phone;
+}
+
+async function portalLogin() {
+  const email = document.getElementById('pl-email').value.trim();
+  const pass  = document.getElementById('pl-pass').value;
+  const errEl = document.getElementById('pl-error');
+  const btn   = document.getElementById('pl-btn');
+  errEl.style.display = 'none';
+  if (!email || !pass) { errEl.textContent = 'Please enter your email and password.'; errEl.style.display='block'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = 'Sign in →';
+  if (error) { errEl.textContent = '⚠ ' + (error.message || 'Invalid email or password.'); errEl.style.display='block'; }
+  else { await portalLoadAndShow(data.user); }
+}
+
+async function portalSignup() {
+  const name    = document.getElementById('ps-name').value.trim();
+  const company = document.getElementById('ps-company').value.trim();
+  const phone   = document.getElementById('ps-phone').value.trim();
+  const email   = document.getElementById('ps-email').value.trim();
+  const pass    = document.getElementById('ps-pass').value;
+  const errEl   = document.getElementById('ps-error');
+  const sucEl   = document.getElementById('ps-success');
+  const btn     = document.getElementById('ps-btn');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+  if (!name || !email || !pass) { errEl.textContent = 'Please fill in all required fields.'; errEl.style.display='block'; return; }
+  if (pass.length < 8) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display='block'; return; }
+
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  const { data, error } = await _sb.auth.signUp({
+    email, password: pass,
+    options: { data: { full_name: name, company_name: company, phone } }
+  });
+  btn.disabled = false; btn.textContent = 'Create account →';
+
+  if (error) { errEl.textContent = '⚠ ' + (error.message || 'Signup failed. Try again.'); errEl.style.display='block'; }
+  else if (data.user && data.session) { await portalLoadAndShow(data.user); }
+  else {
+    sucEl.textContent = '✅ Account created! Check your email to confirm your address, then sign in.';
+    sucEl.style.display = 'block';
+    btn.disabled = true;
+  }
+}
+
+async function portalReset() {
+  const email = document.getElementById('pr-email').value.trim();
+  const msgEl = document.getElementById('pr-msg');
+  const btn   = document.getElementById('pr-btn');
+  msgEl.style.display = 'none';
+  if (!email) { msgEl.textContent='Please enter your email address.'; msgEl.style.background='rgba(192,57,43,.1)'; msgEl.style.color='#E06C5A'; msgEl.style.border='1px solid rgba(192,57,43,.3)'; msgEl.style.display='block'; return; }
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const { error } = await _sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href.split('#')[0] + '#portal'
+  });
+  btn.disabled = false; btn.textContent = 'Send reset link →';
+  if (error) { msgEl.textContent='⚠ '+error.message; msgEl.style.background='rgba(192,57,43,.1)'; msgEl.style.color='#E06C5A'; msgEl.style.border='1px solid rgba(192,57,43,.3)'; }
+  else { msgEl.textContent='✅ Reset link sent! Check your email inbox.'; msgEl.style.background='rgba(29,168,118,.12)'; msgEl.style.color='#1DA876'; msgEl.style.border='1px solid rgba(29,168,118,.3)'; }
+  msgEl.style.display = 'block';
+}
+
+document.getElementById('portal-logout-btn').addEventListener('click', async () => {
+  await _sb.auth.signOut();
+  document.getElementById('portal-dashboard-wrap').style.display = 'none';
+  document.getElementById('portal-auth-wrap').style.display = 'flex';
+  document.getElementById('pl-email').value = '';
+  document.getElementById('pl-pass').value = '';
+  portalShowTab('login');
+});
+
+// Enter key on login password
+document.getElementById('pl-pass').addEventListener('keydown', e => { if (e.key==='Enter') portalLogin(); });
+document.getElementById('pl-email').addEventListener('keydown', e => { if (e.key==='Enter') portalLogin(); });
+
+function showProfileEdit() {
+  document.getElementById('portal-profile-view').style.display = 'none';
+  document.getElementById('portal-profile-edit').style.display = 'block';
+}
+function cancelProfileEdit() {
+  document.getElementById('portal-profile-edit').style.display = 'none';
+  document.getElementById('portal-profile-view').style.display = 'block';
+  document.getElementById('pe-msg').style.display = 'none';
+}
+async function saveProfile() {
+  const btn = document.getElementById('pe-save-btn');
+  const msg = document.getElementById('pe-msg');
+  msg.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await _sb.auth.updateUser({ data: {
+    full_name:    document.getElementById('pe-name').value.trim(),
+    company_name: document.getElementById('pe-company').value.trim(),
+    phone:        document.getElementById('pe-phone').value.trim(),
+  }});
+  btn.disabled = false; btn.textContent = 'Save changes';
+  if (error) {
+    msg.textContent='⚠ '+error.message; msg.style.background='rgba(192,57,43,.1)'; msg.style.color='#E06C5A'; msg.style.border='1px solid rgba(192,57,43,.3)'; msg.style.display='block';
+  } else {
+    // Refresh display
+    const { data: { user } } = await _sb.auth.getUser();
+    await portalLoadAndShow(user);
+    cancelProfileEdit();
+  }
+}
+async function changePassword() {
+  const newPass = document.getElementById('cp-new').value;
+  const confirm = document.getElementById('cp-confirm').value;
+  const msg     = document.getElementById('cp-msg');
+  const btn     = document.getElementById('cp-btn');
+  msg.style.display = 'none';
+  if (newPass.length < 8) { msg.textContent='Password must be at least 8 characters.'; msg.style.background='rgba(192,57,43,.1)'; msg.style.color='#E06C5A'; msg.style.border='1px solid rgba(192,57,43,.3)'; msg.style.display='block'; return; }
+  if (newPass !== confirm) { msg.textContent='Passwords do not match.'; msg.style.background='rgba(192,57,43,.1)'; msg.style.color='#E06C5A'; msg.style.border='1px solid rgba(192,57,43,.3)'; msg.style.display='block'; return; }
+  btn.disabled = true; btn.textContent = 'Updating…';
+  const { error } = await _sb.auth.updateUser({ password: newPass });
+  btn.disabled = false; btn.textContent = 'Update password';
+  if (error) { msg.textContent='⚠ '+error.message; msg.style.background='rgba(192,57,43,.1)'; msg.style.color='#E06C5A'; msg.style.border='1px solid rgba(192,57,43,.3)'; }
+  else { msg.textContent='✅ Password updated successfully.'; msg.style.background='rgba(29,168,118,.12)'; msg.style.color='#1DA876'; msg.style.border='1px solid rgba(29,168,118,.3)'; document.getElementById('cp-new').value=''; document.getElementById('cp-confirm').value=''; }
+  msg.style.display = 'block';
+}
+
+/* ════════════════════════════════════════════
+   ADMIN DASHBOARD
+════════════════════════════════════════════ */
+let _adminData     = [];
+let _adminFiltered = [];
+let _adminPage     = 1;
+const ADMIN_PAGE_SIZE = 20;
+
+async function checkAdminSession() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    showAdminDashboard(session.user.email);
+    adminLoadData();
+  } else {
+    showAdminLogin();
+  }
+}
+function showAdminLogin() {
+  document.getElementById('admin-login-wrap').style.display = 'block';
+  document.getElementById('admin-dashboard-wrap').style.display = 'none';
+}
+function showAdminDashboard(email) {
+  document.getElementById('admin-login-wrap').style.display = 'none';
+  document.getElementById('admin-dashboard-wrap').style.display = 'block';
+  document.getElementById('admin-user-email').textContent = email;
+}
+
+document.getElementById('admin-login-btn').addEventListener('click', async () => {
+  const email    = document.getElementById('admin-email').value.trim();
+  const password = document.getElementById('admin-password').value;
+  const errEl    = document.getElementById('admin-login-error');
+  const btn      = document.getElementById('admin-login-btn');
+  if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…'; errEl.style.display = 'none';
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Sign in →';
+  if (error) { errEl.textContent = '⚠ ' + (error.message || 'Invalid email or password.'); errEl.style.display = 'block'; }
+  else { showAdminDashboard(data.user.email); adminLoadData(); }
+});
+document.getElementById('admin-password').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('admin-login-btn').click(); });
+document.getElementById('admin-logout-btn').addEventListener('click', async () => {
+  await _sb.auth.signOut();
+  showAdminLogin();
+  document.getElementById('admin-email').value = '';
+  document.getElementById('admin-password').value = '';
+});
+
+async function adminLoadData() {
+  document.getElementById('admin-loading').style.display = 'block';
+  document.getElementById('admin-table').style.display   = 'none';
+  document.getElementById('admin-empty').style.display   = 'none';
+  document.getElementById('admin-pagination').style.display = 'none';
+  const { data, error } = await _sb.from('quotes').select('*').order('created_at', { ascending: false });
+  if (error) { document.getElementById('admin-loading').textContent = '⚠ Failed to load. Are you signed in?'; return; }
+  _adminData = data || [];
+  adminUpdateStats();
+  adminFilterRender();
+}
+
+function adminUpdateStats() {
+  const now  = new Date();
+  const week = new Date(now - 7*86400000);
+  document.getElementById('stat-total').textContent     = _adminData.length;
+  document.getElementById('stat-week').textContent      = _adminData.filter(r => new Date(r.created_at) > week).length;
+  document.getElementById('stat-quotes').textContent    = _adminData.filter(r => r.cargo_type !== 'General enquiry').length;
+  document.getElementById('stat-enquiries').textContent = _adminData.filter(r => r.cargo_type === 'General enquiry').length;
+}
+
+function adminFilterRender() {
+  const q      = (document.getElementById('admin-search').value || '').toLowerCase();
+  const type   = document.getElementById('admin-filter-type').value;
+  const period = document.getElementById('admin-filter-period').value;
+  const now    = new Date();
+  _adminFiltered = _adminData.filter(r => {
+    const hay = [r.full_name,r.email,r.phone,r.company_name,r.cargo_type,r.origin,r.destination,r.message].filter(Boolean).join(' ').toLowerCase();
+    if (q && !hay.includes(q)) return false;
+    if (type === 'quote'   && r.cargo_type === 'General enquiry') return false;
+    if (type === 'enquiry' && r.cargo_type !== 'General enquiry') return false;
+    if (period) {
+      const d = new Date(r.created_at);
+      if (period === 'today' && d.toDateString() !== now.toDateString()) return false;
+      if (period === 'week'  && now - d > 7*86400000) return false;
+      if (period === 'month' && (d.getMonth() !== now.getMonth() || d.getFullYear() !== now.getFullYear())) return false;
+    }
+    return true;
+  });
+  _adminPage = 1;
+  adminRenderTable();
+}
+
+function adminRenderTable() {
+  const tbody = document.getElementById('admin-tbody');
+  const table = document.getElementById('admin-table');
+  const empty = document.getElementById('admin-empty');
+  const pag   = document.getElementById('admin-pagination');
+  document.getElementById('admin-loading').style.display = 'none';
+  if (_adminFiltered.length === 0) { table.style.display='none'; empty.style.display='block'; pag.style.display='none'; return; }
+  const start = (_adminPage-1)*ADMIN_PAGE_SIZE;
+  const page  = _adminFiltered.slice(start, start+ADMIN_PAGE_SIZE);
+  const total = _adminFiltered.length;
+  const pages = Math.ceil(total/ADMIN_PAGE_SIZE);
+  tbody.innerHTML = page.map(r => {
+    const isEnq = r.cargo_type === 'General enquiry';
+    const date  = new Date(r.created_at);
+    const dStr  = date.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const tStr  = date.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const typePill = isEnq
+      ? `<span style="font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:rgba(29,168,118,.12);color:var(--ok)">Enquiry</span>`
+      : `<span style="font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:rgba(232,163,61,.14);color:var(--orange)">Quote</span>`;
+    const status = r.status || 'new';
+    const sMap   = {new:['rgba(232,163,61,.14)','var(--orange)'],replied:['rgba(29,168,118,.12)','var(--ok)'],closed:['rgba(255,255,255,.06)','#5E7A98']};
+    const [sBg,sCol] = sMap[status]||sMap.new;
+    const sPill = `<span style="font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:${sBg};color:${sCol};cursor:pointer" onclick="cycleStatus(${r.id},'${status}')">${status}</span>`;
+    return `<tr style="border-bottom:1px solid var(--grey-2)" onmouseover="this.style.background='var(--grey-1)'" onmouseout="this.style.background=''">
+      <td style="padding:13px 16px;white-space:nowrap"><span style="font-family:var(--mono);font-size:.82rem;display:block">${dStr}</span><span style="font-family:var(--mono);font-size:.7rem;color:var(--slate)">${tStr}</span></td>
+      <td style="padding:13px 16px"><b style="font-size:.95rem;display:block">${esc(r.full_name)}</b><span style="font-size:.82rem;color:var(--slate)">${esc(r.company_name||'')}</span></td>
+      <td style="padding:13px 16px"><a href="mailto:${esc(r.email)}" style="font-family:var(--mono);font-size:.78rem;color:var(--navy-6);display:block">${esc(r.email)}</a><span style="font-family:var(--mono);font-size:.76rem;color:var(--slate)">${esc(r.phone||'—')}</span></td>
+      <td style="padding:13px 16px">${typePill}</td>
+      <td style="padding:13px 16px;max-width:180px"><span style="font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">${esc(r.cargo_type||'—')}</span><span style="font-size:.78rem;color:var(--slate)">${esc(r.estimated_weight||'')}</span></td>
+      <td style="padding:13px 16px;white-space:nowrap"><span style="font-family:var(--mono);font-size:.76rem">${esc(r.origin||'—')}</span>${r.destination?`<span style="font-family:var(--mono);font-size:.76rem;color:var(--slate);display:block">→ ${esc(r.destination)}</span>`:''}</td>
+      <td style="padding:13px 16px">${sPill}</td>
+      <td style="padding:13px 16px;text-align:center"><button onclick="openAdminModal(${r.id})" class="btn btn-sm" style="background:var(--navy-8);color:#fff;padding:6px 12px;font-size:.75rem">View</button></td>
+    </tr>`;
+  }).join('');
+  table.style.display = '';
+  empty.style.display = 'none';
+  document.getElementById('admin-page-info').textContent = `Showing ${start+1}–${Math.min(start+ADMIN_PAGE_SIZE,total)} of ${total}`;
+  document.getElementById('admin-prev').disabled = _adminPage === 1;
+  document.getElementById('admin-next').disabled = _adminPage >= pages;
+  pag.style.display = 'flex';
+}
+
+function adminChangePage(dir) {
+  const pages = Math.ceil(_adminFiltered.length/ADMIN_PAGE_SIZE);
+  _adminPage = Math.max(1,Math.min(_adminPage+dir,pages));
+  adminRenderTable();
+}
+
+const STATUS_CYCLE = {new:'replied',replied:'closed',closed:'new'};
+async function cycleStatus(id, current) {
+  const next = STATUS_CYCLE[current]||'new';
+  const { error } = await _sb.from('quotes').update({status:next}).eq('id',id);
+  if (!error) { const r=_adminData.find(x=>x.id===id); if(r) r.status=next; adminFilterRender(); }
+}
+
+function openAdminModal(id) {
+  const r = _adminData.find(x => x.id === id);
+  if (!r) return;
+  const date = new Date(r.created_at).toLocaleString('en-GB',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const rows = [['Submitted',date],['Full name',r.full_name],['Company',r.company_name||'—'],['Email',`<a href="mailto:${esc(r.email)}" style="color:var(--navy-6)">${esc(r.email)}</a>`],['Phone',r.phone||'—'],['Type',r.cargo_type],['Origin',r.origin||'—'],['Destination',r.destination||'—'],['Weight',r.estimated_weight||'—'],['Message',r.message?`<span style="white-space:pre-wrap">${esc(r.message)}</span>`:'—']];
+  document.getElementById('admin-modal-body').innerHTML = `<div style="display:grid;gap:1px;background:var(--grey-2);border:1px solid var(--grey-2);border-radius:var(--rad);overflow:hidden">${rows.map(([k,v])=>`<div style="display:grid;grid-template-columns:140px 1fr;background:#fff"><div style="padding:12px 16px;background:var(--grey-1);font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);border-right:1px solid var(--grey-2)">${k}</div><div style="padding:12px 16px;font-size:.92rem">${v}</div></div>`).join('')}</div>`;
+  document.getElementById('modal-email-btn').href = `mailto:${r.email}?subject=Re: Your enquiry — SUDD Logistics`;
+  document.getElementById('modal-wa-btn').href = r.phone ? `https://wa.me/${r.phone.replace(/[^0-9]/g,'')}?text=Hello%20${encodeURIComponent(r.full_name)}%2C%20thank%20you%20for%20contacting%20SUDD%20Logistics.` : '#';
+  document.getElementById('modal-delete-btn').onclick = () => deleteAdminRow(id);
+  document.getElementById('admin-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeAdminModal() {
+  document.getElementById('admin-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+async function deleteAdminRow(id) {
+  if (!confirm('Delete this submission permanently? This cannot be undone.')) return;
+  const { error } = await _sb.from('quotes').delete().eq('id',id);
+  if (!error) { _adminData=_adminData.filter(r=>r.id!==id); closeAdminModal(); adminUpdateStats(); adminFilterRender(); }
+  else alert('Delete failed: '+error.message);
+}
+function adminExportCSV() {
+  if (!_adminFiltered.length) { alert('No data to export.'); return; }
+  const cols = ['id','created_at','full_name','company_name','email','phone','cargo_type','origin','destination','estimated_weight','message','status'];
+  const csv  = [cols.join(','), ..._adminFiltered.map(r=>cols.map(c=>`"${(r[c]??'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
+  const a    = Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:`sudd-quotes-${new Date().toISOString().slice(0,10)}.csv`});
+  a.click();
+}
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeAdminModal(); });
 </script>
 </body>
 </html>
