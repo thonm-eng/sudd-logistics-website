@@ -2230,160 +2230,463 @@ footer ul .mono { font-size: .76rem; letter-spacing: .1em; color: #5E7A98; }
      ║              ADMIN VIEW                  ║
      ╚══════════════════════════════════════════╝ -->
 <main id="view-admin" class="view">
-  <!-- Login Screen -->
-  <div id="admin-login-wrap">
-    <div style="min-height:100vh;background:var(--navy-9);display:flex;align-items:center;justify-content:center;padding:24px">
-      <div style="width:100%;max-width:400px">
-        <div style="text-align:center;margin-bottom:36px">
-          <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">SUDD Logistics</div>
-          <h1 style="font-family:var(--disp);font-size:2.2rem;font-weight:800;text-transform:uppercase;color:#fff;letter-spacing:.06em">Admin Portal</h1>
-          <p style="color:#5E7A98;font-size:.9rem;margin-top:8px">Sign in to manage quote submissions</p>
-        </div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(232,163,61,.2);border-radius:14px;padding:32px">
-          <div class="field" style="margin-bottom:16px">
-            <label for="admin-email" style="color:#8FA8C5">Email address</label>
-            <input id="admin-email" type="email" placeholder="operations@suddlogistics.com"
-              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
-          </div>
-          <div class="field" style="margin-bottom:22px">
-            <label for="admin-password" style="color:#8FA8C5">Password</label>
-            <input id="admin-password" type="password" placeholder="••••••••"
-              style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
-          </div>
-          <button class="btn btn-gold" id="admin-login-btn" style="width:100%;justify-content:center" type="button">
-            Sign in →
-          </button>
-          <div id="admin-login-error" style="display:none;margin-top:14px;padding:12px 16px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;color:#E06C5A;font-size:.88rem"></div>
-        </div>
-        <p style="text-align:center;margin-top:18px;font-size:.78rem;color:#3A5570">
-          Forgot password? Contact your system administrator.
-        </p>
+
+<style>
+.adm-shell{display:grid;grid-template-columns:210px 1fr;min-height:100vh;background:var(--grey-1)}
+.adm-sidebar{background:var(--navy-9);display:flex;flex-direction:column;position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto}
+.adm-brand{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.adm-brand-name{font-family:var(--disp);font-size:1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff}
+.adm-brand-sub{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#5E7A98;margin-top:2px}
+.adm-nav{padding:12px 8px;flex:1}
+.adm-nav-section{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#3A5570;padding:10px 10px 4px}
+.adm-nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.85rem;color:#8FA8C5;margin-bottom:2px;transition:background .12s,color .12s;font-family:var(--body)}
+.adm-nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.adm-nav-item.adm-active{background:rgba(232,163,61,.12);color:var(--gold)}
+.adm-nav-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.adm-badge{margin-left:auto;background:rgba(240,140,46,.2);color:var(--orange);font-size:.62rem;padding:2px 7px;border-radius:99px;font-family:var(--mono)}
+.adm-nav-bottom{padding:10px 8px;border-top:1px solid rgba(255,255,255,.07)}
+.adm-main{display:flex;flex-direction:column;overflow:hidden}
+.adm-topbar{background:var(--paper);border-bottom:1px solid var(--grey-2);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:70px;z-index:10}
+.adm-tb-left{display:flex;align-items:center;gap:8px}
+.adm-tb-title{font-family:var(--disp);font-size:1.1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.adm-tb-crumb{font-family:var(--mono);font-size:.68rem;color:var(--slate);letter-spacing:.1em;text-transform:uppercase}
+.adm-tb-right{display:flex;align-items:center;gap:12px}
+.adm-search{display:flex;align-items:center;gap:7px;background:var(--grey-1);border:1px solid var(--grey-2);border-radius:7px;padding:7px 12px;font-size:.8rem;color:var(--slate);cursor:text}
+.adm-user-chip{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border:1px solid var(--grey-2);border-radius:99px;cursor:pointer;transition:border-color .15s}
+.adm-user-chip:hover{border-color:var(--gold)}
+.adm-avatar{width:26px;height:26px;border-radius:50%;background:var(--navy-8);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;font-weight:600;color:var(--gold)}
+.adm-content{padding:22px 24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto}
+.adm-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.adm-metric{background:var(--paper);border:1px solid var(--grey-2);border-radius:var(--rad);padding:16px 18px}
+.adm-metric-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.adm-metric-label{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+.adm-metric-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.adm-metric-val{font-family:var(--disp);font-size:2rem;font-weight:700;color:var(--ink);line-height:1}
+.adm-metric-delta{font-size:.75rem;margin-top:6px;display:flex;align-items:center;gap:4px}
+.adm-delta-up{color:var(--ok)}
+.adm-delta-warn{color:var(--warn)}
+.adm-row2{display:grid;grid-template-columns:1.45fr 1fr;gap:16px}
+.adm-row3{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.adm-card{background:var(--paper);border:1px solid var(--grey-2);border-radius:var(--rad);padding:18px 20px}
+.adm-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.adm-card-title{font-family:var(--disp);font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.adm-card-action{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);cursor:pointer}
+.adm-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.adm-table th{text-align:left;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);padding:0 10px 10px;border-bottom:1px solid var(--grey-2)}
+.adm-table td{padding:10px;border-bottom:1px solid var(--grey-2);color:var(--ink);vertical-align:middle}
+.adm-table tr:last-child td{border-bottom:none}
+.adm-table tr:hover td{background:var(--grey-1)}
+.adm-pill{display:inline-block;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:99px}
+.pill-new{background:rgba(240,140,46,.14);color:var(--orange)}
+.pill-replied{background:rgba(29,168,118,.12);color:var(--ok)}
+.pill-closed{background:var(--grey-2);color:var(--slate)}
+.pill-transit{background:rgba(30,72,120,.12);color:var(--navy-6)}
+.pill-border{background:rgba(232,163,61,.16);color:#7A4A0E}
+.pill-done{background:rgba(29,168,118,.12);color:var(--ok)}
+.adm-prog-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.adm-prog-label{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);width:90px;flex-shrink:0}
+.adm-prog-track{flex:1;height:5px;background:var(--grey-2);border-radius:99px;overflow:hidden}
+.adm-prog-fill{height:100%;border-radius:99px}
+.adm-prog-val{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--ink);width:32px;text-align:right}
+.adm-tl-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--grey-2)}
+.adm-tl-item:last-child{border-bottom:none}
+.adm-tl-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.adm-dot-ok{background:var(--ok)}
+.adm-dot-now{background:var(--orange)}
+.adm-dot-pend{background:var(--grey-3)}
+.adm-tl-info{flex:1}
+.adm-tl-name{font-size:.83rem;font-weight:600;color:var(--ink)}
+.adm-tl-sub{font-size:.75rem;color:var(--slate);margin-top:1px}
+.adm-tl-time{font-family:var(--mono);font-size:.62rem;color:var(--slate);white-space:nowrap}
+.adm-line-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--grey-2)}
+.adm-line-item{text-align:center;padding:8px 4px;background:var(--grey-1);border-radius:8px}
+.adm-line-val{font-family:var(--disp);font-size:1.4rem;font-weight:700;color:var(--ink)}
+.adm-line-name{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-top:2px}
+.adm-notif-dot{position:absolute;top:-1px;right:-1px;width:7px;height:7px;background:var(--orange);border-radius:50%;border:1px solid var(--paper)}
+@media(max-width:960px){
+  .adm-shell{grid-template-columns:1fr}
+  .adm-sidebar{display:none}
+  .adm-metrics{grid-template-columns:repeat(2,1fr)}
+  .adm-row2,.adm-row3{grid-template-columns:1fr}
+}
+</style>
+
+<!-- Admin Login -->
+<div id="admin-login-wrap">
+  <div style="min-height:100vh;background:var(--navy-9);display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:50px 50px;pointer-events:none"></div>
+    <div style="width:100%;max-width:380px;position:relative">
+      <div style="text-align:center;margin-bottom:32px">
+        <div style="font-family:var(--mono);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">SUDD Logistics Limited</div>
+        <h1 style="font-family:var(--disp);font-size:2rem;font-weight:800;text-transform:uppercase;color:#fff;letter-spacing:.06em">Admin Portal</h1>
+        <p style="color:#5E7A98;font-size:.88rem;margin-top:7px">Restricted access — authorised staff only</p>
       </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(232,163,61,.2);border-radius:14px;padding:30px">
+        <div class="field" style="margin-bottom:15px">
+          <label for="admin-email" style="color:#8FA8C5">Email address</label>
+          <input id="admin-email" type="email" placeholder="operations@suddlogistics.com" autocomplete="email"
+            style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+        </div>
+        <div class="field" style="margin-bottom:22px">
+          <label for="admin-password" style="color:#8FA8C5">Password</label>
+          <input id="admin-password" type="password" placeholder="••••••••"
+            style="background:rgba(6,20,34,.8);border-color:rgba(255,255,255,.15);color:#fff">
+        </div>
+        <button class="btn btn-gold" id="admin-login-btn" style="width:100%;justify-content:center" type="button">Sign in to dashboard →</button>
+        <div id="admin-login-error" style="display:none;margin-top:14px;padding:11px 14px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;color:#E06C5A;font-size:.86rem"></div>
+      </div>
+      <p style="text-align:center;margin-top:16px;font-size:.76rem;color:#3A5570">Forgot password? Contact your system administrator.</p>
     </div>
   </div>
+</div>
 
-  <!-- Dashboard (shown after login) -->
-  <div id="admin-dashboard-wrap" style="display:none">
-    <!-- Admin top bar -->
-    <div style="background:var(--navy-9);border-bottom:2px solid var(--gold);padding:0">
-      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;height:64px">
-        <div style="display:flex;align-items:center;gap:14px">
-          <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)">Admin Dashboard</span>
-          <span style="width:1px;height:20px;background:rgba(255,255,255,.1)"></span>
-          <span style="font-family:var(--mono);font-size:.7rem;color:#5E7A98;letter-spacing:.1em">SUDD LOGISTICS LIMITED</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span id="admin-user-email" style="font-family:var(--mono);font-size:.72rem;color:#5E7A98"></span>
-          <button id="admin-logout-btn" class="btn btn-sm" style="background:rgba(255,255,255,.06);color:#8FA8C5;border:1px solid rgba(255,255,255,.12);padding:7px 14px;font-size:.78rem">
-            Sign out
-          </button>
+<!-- Admin Dashboard -->
+<div id="admin-dashboard-wrap" style="display:none">
+  <div class="adm-shell">
+
+    <!-- Sidebar -->
+    <aside class="adm-sidebar">
+      <div class="adm-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+            <span style="font-family:var(--mono);font-size:.62rem;font-weight:600;color:var(--navy-8)">SL</span>
+          </div>
+          <div>
+            <div class="adm-brand-name">SUDD Logistics</div>
+            <div class="adm-brand-sub">Admin portal</div>
+          </div>
         </div>
       </div>
-    </div>
+      <nav class="adm-nav">
+        <div class="adm-nav-section">Overview</div>
+        <div class="adm-nav-item adm-active" onclick="adminNavSwitch('overview',this)">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </div>
+        <div class="adm-nav-item" onclick="adminNavSwitch('shipments',this)">
+          <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Shipments
+        </div>
+        <div class="adm-nav-item" id="nav-quotes-item" onclick="adminNavSwitch('quotes',this)">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Quotes
+          <span class="adm-badge" id="nav-quotes-badge">—</span>
+        </div>
+        <div class="adm-nav-item" onclick="adminNavSwitch('clients',this)">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Clients
+        </div>
+        <div class="adm-nav-section">Tools</div>
+        <div class="adm-nav-item" onclick="location.hash='home';setTimeout(()=>{document.getElementById('c-run').scrollIntoView({behavior:'smooth'})},200)">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Demurrage calc
+        </div>
+        <div class="adm-nav-item" onclick="adminExportCSV()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </div>
+      </nav>
+      <div class="adm-nav-bottom">
+        <div class="adm-nav-item" onclick="adminDoLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </div>
+        <div style="padding:10px 10px 4px;font-family:var(--mono);font-size:.6rem;color:#3A5570;letter-spacing:.08em" id="admin-user-email"></div>
+      </div>
+    </aside>
 
-    <div style="background:var(--grey-1);min-height:calc(100vh - 64px);padding:36px 0">
-      <div class="wrap">
+    <!-- Main area -->
+    <div class="adm-main">
+      <!-- Top bar -->
+      <div class="adm-topbar">
+        <div class="adm-tb-left">
+          <span class="adm-tb-crumb">Admin</span>
+          <span style="color:var(--grey-3);font-size:.8rem">›</span>
+          <span class="adm-tb-title" id="adm-page-title">Dashboard</span>
+        </div>
+        <div class="adm-tb-right">
+          <div class="adm-search">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="admin-search" placeholder="Search clients, cargo, routes…" oninput="adminFilterRender()"
+              style="border:none;background:transparent;font-size:.8rem;color:var(--ink);outline:none;width:180px">
+          </div>
+          <div style="position:relative">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slate)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="adm-notif-dot" id="adm-notif-dot" style="display:none"></span>
+          </div>
+          <button id="admin-logout-btn" onclick="adminDoLogout()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2);padding:6px 12px;font-size:.75rem">Sign out</button>
+        </div>
+      </div>
 
-        <!-- Stats row -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px" id="admin-stats-row">
-          <div class="admin-stat-card" style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
-            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">Total Submissions</span>
-            <b id="stat-total" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--navy-8)">—</b>
+      <!-- OVERVIEW panel -->
+      <div id="adm-panel-overview" class="adm-content">
+
+        <!-- Metric cards -->
+        <div class="adm-metrics" id="admin-stats-row">
+          <div class="adm-metric">
+            <div class="adm-metric-top">
+              <span class="adm-metric-label">Total quotes</span>
+              <div class="adm-metric-icon" style="background:rgba(30,72,120,.1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy-6)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </div>
+            </div>
+            <div class="adm-metric-val" id="stat-total">—</div>
+            <div class="adm-metric-delta adm-delta-up" id="stat-week-delta">Loading…</div>
           </div>
-          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
-            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">This Week</span>
-            <b id="stat-week" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--navy-8)">—</b>
+          <div class="adm-metric">
+            <div class="adm-metric-top">
+              <span class="adm-metric-label">Pending replies</span>
+              <div class="adm-metric-icon" style="background:rgba(240,140,46,.1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+            </div>
+            <div class="adm-metric-val" id="stat-quotes">—</div>
+            <div class="adm-metric-delta adm-delta-warn" id="stat-new-delta">Loading…</div>
           </div>
-          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
-            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">Quote Requests</span>
-            <b id="stat-quotes" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--gold)">—</b>
+          <div class="adm-metric">
+            <div class="adm-metric-top">
+              <span class="adm-metric-label">General enquiries</span>
+              <div class="adm-metric-icon" style="background:rgba(29,168,118,.1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+            </div>
+            <div class="adm-metric-val" id="stat-enquiries">—</div>
+            <div class="adm-metric-delta adm-delta-up">Contact form submissions</div>
           </div>
-          <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:20px 22px">
-            <span style="font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px">General Enquiries</span>
-            <b id="stat-enquiries" style="font-family:var(--disp);font-size:2.2rem;font-weight:700;color:var(--ok)">—</b>
+          <div class="adm-metric">
+            <div class="adm-metric-top">
+              <span class="adm-metric-label">This week</span>
+              <div class="adm-metric-icon" style="background:rgba(232,163,61,.1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+            </div>
+            <div class="adm-metric-val" id="stat-week">—</div>
+            <div class="adm-metric-delta adm-delta-up">New submissions</div>
           </div>
         </div>
 
-        <!-- Toolbar -->
-        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);padding:16px 20px;margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-          <input id="admin-search" placeholder="🔍  Search name, email, cargo, destination…"
-            style="flex:1;min-width:200px;font-family:var(--body);font-size:.95rem;padding:10px 14px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);outline:none"
-            oninput="adminFilterRender()">
-          <select id="admin-filter-type" onchange="adminFilterRender()"
-            style="font-family:var(--mono);font-size:.78rem;padding:10px 12px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);letter-spacing:.06em">
-            <option value="">All types</option>
-            <option value="quote">Quote requests</option>
-            <option value="enquiry">General enquiries</option>
-          </select>
-          <select id="admin-filter-period" onchange="adminFilterRender()"
-            style="font-family:var(--mono);font-size:.78rem;padding:10px 12px;border:1.5px solid var(--grey-2);border-radius:7px;color:var(--ink);letter-spacing:.06em">
-            <option value="">All time</option>
-            <option value="today">Today</option>
-            <option value="week">This week</option>
-            <option value="month">This month</option>
-          </select>
-          <button onclick="adminExportCSV()" class="btn btn-sm btn-navy" style="white-space:nowrap">
-            ⬇ Export CSV
-          </button>
-          <button onclick="adminLoadData()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2)">
-            ↻ Refresh
-          </button>
+        <!-- Row 2: recent quotes + corridor -->
+        <div class="adm-row2">
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <span class="adm-card-title">Recent submissions</span>
+              <span class="adm-card-action" onclick="adminNavSwitch('quotes',document.querySelector('.adm-nav-item:nth-child(3)'))">View all →</span>
+            </div>
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Route</th>
+                  <th>Cargo</th>
+                  <th>Status</th>
+                  <th style="text-align:right">Date</th>
+                </tr>
+              </thead>
+              <tbody id="overview-recent-tbody">
+                <tr><td colspan="5" style="color:var(--slate);text-align:center;padding:20px">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <span class="adm-card-title">Corridor volume</span>
+              <span style="font-family:var(--mono);font-size:.62rem;color:var(--slate)" id="adm-month-label"></span>
+            </div>
+            <div id="adm-corridor-bars">
+              <div class="adm-prog-row"><span class="adm-prog-label">MSA → NBO</span><div class="adm-prog-track"><div class="adm-prog-fill" style="width:88%;background:var(--navy-6)"></div></div><span class="adm-prog-val">88%</span></div>
+              <div class="adm-prog-row"><span class="adm-prog-label">NBO → Malaba</span><div class="adm-prog-track"><div class="adm-prog-fill" style="width:74%;background:var(--navy-6)"></div></div><span class="adm-prog-val">74%</span></div>
+              <div class="adm-prog-row"><span class="adm-prog-label">Malaba → Nimule</span><div class="adm-prog-track"><div class="adm-prog-fill" style="width:61%;background:var(--gold)"></div></div><span class="adm-prog-val">61%</span></div>
+              <div class="adm-prog-row"><span class="adm-prog-label">Nimule → Juba</span><div class="adm-prog-track"><div class="adm-prog-fill" style="width:45%;background:var(--gold)"></div></div><span class="adm-prog-val">45%</span></div>
+            </div>
+            <div class="adm-line-grid">
+              <div class="adm-line-item"><div class="adm-line-val" id="line-msc">—</div><div class="adm-line-name">MSC</div></div>
+              <div class="adm-line-item"><div class="adm-line-val" id="line-maersk">—</div><div class="adm-line-name">Maersk</div></div>
+              <div class="adm-line-item"><div class="adm-line-val" id="line-pil">—</div><div class="adm-line-name">PIL</div></div>
+              <div class="adm-line-item"><div class="adm-line-val" id="line-other">—</div><div class="adm-line-name">Other</div></div>
+            </div>
+          </div>
         </div>
 
-        <!-- Table -->
-        <div style="background:#fff;border:1px solid var(--grey-2);border-radius:var(--rad);overflow:hidden">
-          <div id="admin-loading" style="padding:48px;text-align:center;color:var(--slate);font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase">
-            Loading submissions…
+        <!-- Row 3: shipments + activity -->
+        <div class="adm-row3">
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <span class="adm-card-title">Live shipments</span>
+              <span class="adm-card-action" onclick="adminNavSwitch('shipments',null)">Track all →</span>
+            </div>
+            <table class="adm-table">
+              <thead><tr><th>Container</th><th>Client</th><th>Stage</th><th style="text-align:right">ETA</th></tr></thead>
+              <tbody>
+                <tr><td style="font-family:var(--mono);font-size:.78rem">BEAU2971574</td><td>Bobo Poty</td><td><span class="adm-pill pill-transit">In transit</span></td><td style="text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--slate)">3 days</td></tr>
+                <tr><td style="font-family:var(--mono);font-size:.78rem">TXGU6972970</td><td>Ammars Co.</td><td><span class="adm-pill pill-border">Malaba</span></td><td style="text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--slate)">5 days</td></tr>
+                <tr><td style="font-family:var(--mono);font-size:.78rem">CAAU4755792</td><td>Solitaire</td><td><span class="adm-pill pill-done">Delivered</span></td><td style="text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--slate)">Done</td></tr>
+                <tr><td style="font-family:var(--mono);font-size:.78rem">FFAU4711340</td><td>Africa Multi.</td><td><span class="adm-pill pill-done">Delivered</span></td><td style="text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--slate)">Done</td></tr>
+              </tbody>
+            </table>
           </div>
+
+          <div class="adm-card">
+            <div class="adm-card-head">
+              <span class="adm-card-title">Activity feed</span>
+            </div>
+            <div id="adm-activity-feed">
+              <div class="adm-tl-item"><div class="adm-tl-dot adm-dot-now"></div><div class="adm-tl-info"><div class="adm-tl-name">BEAU2971574 loaded at NFT CFS</div><div class="adm-tl-sub">Truck KCE 211Z dispatched — en route Malaba</div></div><div class="adm-tl-time">Today</div></div>
+              <div class="adm-tl-item"><div class="adm-tl-dot adm-dot-ok"></div><div class="adm-tl-info"><div class="adm-tl-name">New quote — Solitaire Pharma</div><div class="adm-tl-sub">Mumbai → Kampala · Pharmaceuticals · 40ft</div></div><div class="adm-tl-time">Today</div></div>
+              <div class="adm-tl-item"><div class="adm-tl-dot adm-dot-ok"></div><div class="adm-tl-info"><div class="adm-tl-name">Client signup — Beijing Supermarket</div><div class="adm-tl-sub">Portal registration confirmed</div></div><div class="adm-tl-time">Yesterday</div></div>
+              <div class="adm-tl-item"><div class="adm-tl-dot adm-dot-ok"></div><div class="adm-tl-info"><div class="adm-tl-name">CAAU4755792 empty returned</div><div class="adm-tl-sub">Deposit refunded · File closed</div></div><div class="adm-tl-time">Yesterday</div></div>
+              <div class="adm-tl-item"><div class="adm-tl-dot adm-dot-now"></div><div class="adm-tl-info"><div class="adm-tl-name">Demurrage alert — free days expiring</div><div class="adm-tl-sub">TXGU6972970 · MSC · 2 days remaining</div></div><div class="adm-tl-time">2 days ago</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /overview panel -->
+
+      <!-- QUOTES panel -->
+      <div id="adm-panel-quotes" class="adm-content" style="display:none">
+        <div class="adm-card" style="padding:14px 18px">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <div style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--grey-1);border:1px solid var(--grey-2);border-radius:7px;padding:8px 12px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--slate)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="admin-search-quotes" placeholder="Search name, email, cargo, destination…" oninput="adminFilterRender()"
+                style="border:none;background:transparent;font-size:.82rem;color:var(--ink);outline:none;width:100%">
+            </div>
+            <select id="admin-filter-type" onchange="adminFilterRender()" style="font-family:var(--mono);font-size:.72rem;padding:9px 12px;border:1px solid var(--grey-2);border-radius:7px;color:var(--ink)">
+              <option value="">All types</option>
+              <option value="quote">Quote requests</option>
+              <option value="enquiry">General enquiries</option>
+            </select>
+            <select id="admin-filter-period" onchange="adminFilterRender()" style="font-family:var(--mono);font-size:.72rem;padding:9px 12px;border:1px solid var(--grey-2);border-radius:7px;color:var(--ink)">
+              <option value="">All time</option>
+              <option value="today">Today</option>
+              <option value="week">This week</option>
+              <option value="month">This month</option>
+            </select>
+            <button onclick="adminExportCSV()" class="btn btn-sm btn-navy" style="white-space:nowrap">⬇ Export CSV</button>
+            <button onclick="adminLoadData()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2)">↻</button>
+          </div>
+        </div>
+
+        <div class="adm-card" style="padding:0;overflow:hidden">
+          <div id="admin-loading" style="padding:48px;text-align:center;color:var(--slate);font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase">Loading submissions…</div>
           <div id="admin-empty" style="display:none;padding:64px 24px;text-align:center">
-            <div style="font-size:2.5rem;margin-bottom:14px">📭</div>
+            <div style="font-size:2rem;margin-bottom:12px">📭</div>
             <p style="color:var(--slate);font-size:.95rem">No submissions match your filters.</p>
           </div>
           <div style="overflow-x:auto">
-            <table id="admin-table" style="width:100%;border-collapse:collapse;display:none">
+            <table id="admin-table" class="adm-table" style="display:none">
               <thead>
-                <tr style="background:var(--grey-1);border-bottom:2px solid var(--grey-2)">
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);white-space:nowrap">Date</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Name</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Contact</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Type</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Cargo / Subject</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Route</th>
-                  <th style="padding:13px 16px;text-align:left;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Status</th>
-                  <th style="padding:13px 16px;text-align:center;font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)">Actions</th>
+                <tr style="background:var(--grey-1)">
+                  <th style="padding:12px 14px">Date</th>
+                  <th style="padding:12px 14px">Name</th>
+                  <th style="padding:12px 14px">Contact</th>
+                  <th style="padding:12px 14px">Type</th>
+                  <th style="padding:12px 14px">Cargo</th>
+                  <th style="padding:12px 14px">Route</th>
+                  <th style="padding:12px 14px">Status</th>
+                  <th style="padding:12px 14px;text-align:center">Action</th>
                 </tr>
               </thead>
               <tbody id="admin-tbody"></tbody>
             </table>
           </div>
-          <div id="admin-pagination" style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--grey-2);display:none">
-            <span id="admin-page-info" style="font-family:var(--mono);font-size:.72rem;color:var(--slate);letter-spacing:.08em"></span>
+          <div id="admin-pagination" style="display:none;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--grey-2)">
+            <span id="admin-page-info" style="font-family:var(--mono);font-size:.7rem;color:var(--slate)"></span>
             <div style="display:flex;gap:8px">
-              <button id="admin-prev" onclick="adminChangePage(-1)" class="btn btn-sm btn-outline" style="padding:7px 14px">← Prev</button>
-              <button id="admin-next" onclick="adminChangePage(1)"  class="btn btn-sm btn-outline" style="padding:7px 14px">Next →</button>
+              <button id="admin-prev" onclick="adminChangePage(-1)" class="btn btn-sm btn-outline" style="padding:6px 14px">← Prev</button>
+              <button id="admin-next" onclick="adminChangePage(1)"  class="btn btn-sm btn-outline" style="padding:6px 14px">Next →</button>
             </div>
           </div>
         </div>
+      </div><!-- /quotes panel -->
 
+      <!-- SHIPMENTS panel -->
+      <div id="adm-panel-shipments" class="adm-content" style="display:none">
+        <div class="adm-card">
+          <div class="adm-card-head">
+            <span class="adm-card-title">Active shipments</span>
+            <span style="font-family:var(--mono);font-size:.65rem;color:var(--slate)">Hardcoded demo data — connect Supabase shipments table to make live</span>
+          </div>
+          <table class="adm-table">
+            <thead><tr><th>Container</th><th>BL Number</th><th>Client</th><th>Line</th><th>Origin → Dest</th><th>Stage</th><th style="text-align:right">ETA</th></tr></thead>
+            <tbody>
+              <tr onclick="location.hash='tracking';setTimeout(()=>{document.getElementById('page-track-input').value='BEAU2971574';track('BEAU2971574')},100)" style="cursor:pointer">
+                <td style="font-family:var(--mono);font-size:.8rem;color:var(--navy-6)">BEAU2971574</td>
+                <td style="font-family:var(--mono);font-size:.78rem">MEDUKE004417</td>
+                <td>Bobo Poty</td>
+                <td>MSC</td>
+                <td style="font-size:.8rem;color:var(--slate)">Jebel Ali → Nimule</td>
+                <td><span class="adm-pill pill-transit">Loaded</span></td>
+                <td style="text-align:right;font-family:var(--mono);font-size:.75rem">3 days</td>
+              </tr>
+              <tr onclick="location.hash='tracking';setTimeout(()=>{document.getElementById('page-track-input').value='TXGU6972970';track('TXGU6972970')},100)" style="cursor:pointer">
+                <td style="font-family:var(--mono);font-size:.8rem;color:var(--navy-6)">TXGU6972970</td>
+                <td style="font-family:var(--mono);font-size:.78rem">MSCU12345678</td>
+                <td>Ammars Co.</td>
+                <td>MSC</td>
+                <td style="font-size:.8rem;color:var(--slate)">Jebel Ali → Juba</td>
+                <td><span class="adm-pill pill-border">In Transit</span></td>
+                <td style="text-align:right;font-family:var(--mono);font-size:.75rem">5 days</td>
+              </tr>
+              <tr onclick="location.hash='tracking';setTimeout(()=>{document.getElementById('page-track-input').value='CAAU4755792';track('CAAU4755792')},100)" style="cursor:pointer">
+                <td style="font-family:var(--mono);font-size:.8rem;color:var(--navy-6)">CAAU4755792</td>
+                <td style="font-family:var(--mono);font-size:.78rem">MAEU258114739</td>
+                <td>Solitaire</td>
+                <td>Maersk</td>
+                <td style="font-size:.8rem;color:var(--slate)">Shanghai → Juba</td>
+                <td><span class="adm-pill pill-done">Delivered</span></td>
+                <td style="text-align:right;font-family:var(--mono);font-size:.75rem">Done</td>
+              </tr>
+              <tr onclick="location.hash='tracking';setTimeout(()=>{document.getElementById('page-track-input').value='FFAU4711340';track('FFAU4711340')},100)" style="cursor:pointer">
+                <td style="font-family:var(--mono);font-size:.8rem;color:var(--navy-6)">FFAU4711340</td>
+                <td style="font-family:var(--mono);font-size:.78rem">NGPN60005100</td>
+                <td>Africa Multi.</td>
+                <td>PIL</td>
+                <td style="font-size:.8rem;color:var(--slate)">Ningbo → Juba</td>
+                <td><span class="adm-pill pill-done">Delivered</span></td>
+                <td style="text-align:right;font-family:var(--mono);font-size:.75rem">Done</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top:14px;font-size:.8rem;color:var(--slate)">Click any row to open full tracking timeline.</p>
+        </div>
+      </div><!-- /shipments panel -->
+
+      <!-- CLIENTS panel -->
+      <div id="adm-panel-clients" class="adm-content" style="display:none">
+        <div class="adm-card">
+          <div class="adm-card-head">
+            <span class="adm-card-title">Registered clients</span>
+            <button onclick="adminLoadClients()" class="btn btn-sm" style="background:var(--grey-1);color:var(--slate);border:1px solid var(--grey-2)">↻ Refresh</button>
+          </div>
+          <div id="clients-loading" style="padding:32px;text-align:center;color:var(--slate);font-family:var(--mono);font-size:.78rem">Loading…</div>
+          <table id="clients-table" class="adm-table" style="display:none">
+            <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Phone</th><th style="text-align:right">Joined</th></tr></thead>
+            <tbody id="clients-tbody"></tbody>
+          </table>
+          <div id="clients-empty" style="display:none;padding:32px;text-align:center;color:var(--slate);font-size:.9rem">No registered clients yet.</div>
+        </div>
+      </div><!-- /clients panel -->
+
+    </div><!-- /adm-main -->
+  </div><!-- /adm-shell -->
+
+  <!-- Detail modal -->
+  <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(6,20,34,.7);padding:24px;overflow-y:auto" onclick="if(event.target===this)closeAdminModal()">
+    <div style="background:var(--paper);border-radius:var(--rad-lg);max-width:620px;margin:40px auto;overflow:hidden;box-shadow:var(--shadow)">
+      <div style="background:var(--navy-8);padding:20px 26px;display:flex;justify-content:space-between;align-items:center">
+        <h3 style="font-family:var(--disp);font-size:1.1rem;letter-spacing:.1em;text-transform:uppercase;color:#fff">Submission detail</h3>
+        <button onclick="closeAdminModal()" style="background:none;border:none;color:#8FA8C5;font-size:1.4rem;cursor:pointer;line-height:1">×</button>
       </div>
-    </div>
-
-    <!-- Detail modal -->
-    <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(6,20,34,.75);backdrop-filter:blur(6px);padding:24px;overflow-y:auto" onclick="if(event.target===this)closeAdminModal()">
-      <div style="background:#fff;border-radius:var(--rad-lg);max-width:640px;margin:0 auto;overflow:hidden;box-shadow:var(--shadow)">
-        <div style="background:var(--navy-8);padding:22px 28px;display:flex;justify-content:space-between;align-items:center">
-          <h3 style="font-family:var(--disp);font-size:1.2rem;letter-spacing:.1em;text-transform:uppercase;color:#fff">Submission Detail</h3>
-          <button onclick="closeAdminModal()" style="background:none;border:none;color:#8FA8C5;font-size:1.4rem;cursor:pointer;line-height:1">×</button>
-        </div>
-        <div id="admin-modal-body" style="padding:28px"></div>
-        <div style="padding:18px 28px;border-top:1px solid var(--grey-2);display:flex;gap:10px;flex-wrap:wrap">
-          <a id="modal-email-btn" href="#" class="btn btn-gold btn-sm">✉ Reply by Email</a>
-          <a id="modal-wa-btn" href="#" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff">💬 WhatsApp</a>
-          <button id="modal-delete-btn" class="btn btn-sm" style="background:rgba(192,57,43,.1);color:var(--err);border:1px solid rgba(192,57,43,.25);margin-left:auto">🗑 Delete</button>
-        </div>
+      <div id="admin-modal-body" style="padding:26px"></div>
+      <div style="padding:16px 26px;border-top:1px solid var(--grey-2);display:flex;gap:10px;flex-wrap:wrap">
+        <a id="modal-email-btn" href="#" class="btn btn-gold btn-sm">✉ Reply by email</a>
+        <a id="modal-wa-btn" href="#" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff">💬 WhatsApp</a>
+        <button id="modal-delete-btn" class="btn btn-sm" style="background:rgba(192,57,43,.1);color:var(--err);border:1px solid rgba(192,57,43,.25);margin-left:auto">🗑 Delete</button>
       </div>
     </div>
   </div>
+</div><!-- /admin-dashboard-wrap -->
 </main>
 
 <footer>
@@ -3032,6 +3335,30 @@ async function checkAdminSession() {
     showAdminLogin();
   }
 }
+/* ── Admin nav panel switcher ── */
+function adminNavSwitch(panel, el) {
+  ['overview','quotes','shipments','clients'].forEach(p => {
+    const pEl = document.getElementById('adm-panel-'+p);
+    if (pEl) pEl.style.display = p === panel ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.adm-nav-item').forEach(i => i.classList.remove('adm-active'));
+  if (el) el.classList.add('adm-active');
+  const titles = {overview:'Dashboard',quotes:'Quote submissions',shipments:'Shipments',clients:'Clients'};
+  const t = document.getElementById('adm-page-title');
+  if (t) t.textContent = titles[panel] || 'Dashboard';
+  if (panel === 'quotes') adminFilterRender();
+  if (panel === 'clients') adminLoadClients();
+}
+
+/* ── Logout helper ── */
+async function adminDoLogout() {
+  await _sb.auth.signOut();
+  document.getElementById('admin-login-wrap').style.display = 'block';
+  document.getElementById('admin-dashboard-wrap').style.display = 'none';
+  document.getElementById('admin-email').value = '';
+  document.getElementById('admin-password').value = '';
+}
+
 function showAdminLogin() {
   document.getElementById('admin-login-wrap').style.display = 'block';
   document.getElementById('admin-dashboard-wrap').style.display = 'none';
@@ -3040,6 +3367,9 @@ function showAdminDashboard(email) {
   document.getElementById('admin-login-wrap').style.display = 'none';
   document.getElementById('admin-dashboard-wrap').style.display = 'block';
   document.getElementById('admin-user-email').textContent = email;
+  // Set month label
+  const ml = document.getElementById('adm-month-label');
+  if (ml) ml.textContent = new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'});
 }
 
 document.getElementById('admin-login-btn').addEventListener('click', async () => {
@@ -3050,17 +3380,12 @@ document.getElementById('admin-login-btn').addEventListener('click', async () =>
   if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; errEl.style.display = 'block'; return; }
   btn.disabled = true; btn.textContent = 'Signing in…'; errEl.style.display = 'none';
   const { data, error } = await _sb.auth.signInWithPassword({ email, password });
-  btn.disabled = false; btn.textContent = 'Sign in →';
+  btn.disabled = false; btn.textContent = 'Sign in to dashboard →';
   if (error) { errEl.textContent = '⚠ ' + (error.message || 'Invalid email or password.'); errEl.style.display = 'block'; }
   else { showAdminDashboard(data.user.email); adminLoadData(); }
 });
 document.getElementById('admin-password').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('admin-login-btn').click(); });
-document.getElementById('admin-logout-btn').addEventListener('click', async () => {
-  await _sb.auth.signOut();
-  showAdminLogin();
-  document.getElementById('admin-email').value = '';
-  document.getElementById('admin-password').value = '';
-});
+document.getElementById('admin-logout-btn').addEventListener('click', adminDoLogout);
 
 async function adminLoadData() {
   document.getElementById('admin-loading').style.display = 'block';
@@ -3071,22 +3396,89 @@ async function adminLoadData() {
   if (error) { document.getElementById('admin-loading').textContent = '⚠ Failed to load. Are you signed in?'; return; }
   _adminData = data || [];
   adminUpdateStats();
+  adminPopulateOverview();
   adminFilterRender();
 }
 
+/* ── Clients loader ── */
+async function adminLoadClients() {
+  document.getElementById('clients-loading').style.display = 'block';
+  document.getElementById('clients-table').style.display   = 'none';
+  document.getElementById('clients-empty').style.display   = 'none';
+  const { data, error } = await _sb.auth.admin ? _sb.auth.admin.listUsers() : { data: null, error: { message: 'Admin API not available on client side' } };
+  document.getElementById('clients-loading').style.display = 'none';
+  if (error || !data) {
+    document.getElementById('clients-empty').style.display = 'block';
+    document.getElementById('clients-empty').textContent = 'Client list requires Supabase service role key — view in Supabase → Authentication → Users.';
+    return;
+  }
+  const users = data.users || [];
+  if (!users.length) { document.getElementById('clients-empty').style.display = 'block'; return; }
+  document.getElementById('clients-tbody').innerHTML = users.map(u => {
+    const m = u.user_metadata || {};
+    const d = new Date(u.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    return `<tr>
+      <td>${esc(m.full_name||'—')}</td>
+      <td style="font-family:var(--mono);font-size:.78rem"><a href="mailto:${esc(u.email)}" style="color:var(--navy-6)">${esc(u.email)}</a></td>
+      <td>${esc(m.company_name||'—')}</td>
+      <td style="font-family:var(--mono);font-size:.78rem">${esc(m.phone||'—')}</td>
+      <td style="text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--slate)">${d}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('clients-table').style.display = '';
+}
+
 function adminUpdateStats() {
-  const now  = new Date();
-  const week = new Date(now - 7*86400000);
-  document.getElementById('stat-total').textContent     = _adminData.length;
-  document.getElementById('stat-week').textContent      = _adminData.filter(r => new Date(r.created_at) > week).length;
-  document.getElementById('stat-quotes').textContent    = _adminData.filter(r => r.cargo_type !== 'General enquiry').length;
-  document.getElementById('stat-enquiries').textContent = _adminData.filter(r => r.cargo_type === 'General enquiry').length;
+  const now   = new Date();
+  const week  = new Date(now - 7*86400000);
+  const total = _adminData.length;
+  const wk    = _adminData.filter(r => new Date(r.created_at) > week).length;
+  const quotes= _adminData.filter(r => r.cargo_type !== 'General enquiry' && r.status !== 'replied' && r.status !== 'closed').length;
+  const enq   = _adminData.filter(r => r.cargo_type === 'General enquiry').length;
+  document.getElementById('stat-total').textContent     = total;
+  document.getElementById('stat-week').textContent      = wk;
+  document.getElementById('stat-quotes').textContent    = quotes;
+  document.getElementById('stat-enquiries').textContent = enq;
+  const wd = document.getElementById('stat-week-delta');
+  if (wd) wd.textContent = wk + ' new submission' + (wk !== 1 ? 's' : '') + ' this week';
+  const nd = document.getElementById('stat-new-delta');
+  if (nd) nd.textContent = quotes + ' awaiting response';
+  const badge = document.getElementById('nav-quotes-badge');
+  if (badge) badge.textContent = quotes || '0';
+  const dot = document.getElementById('adm-notif-dot');
+  if (dot) dot.style.display = quotes > 0 ? 'block' : 'none';
+}
+
+/* ── Populate overview recent table ── */
+function adminPopulateOverview() {
+  const tbody = document.getElementById('overview-recent-tbody');
+  if (!tbody) return;
+  const recent = _adminData.slice(0, 6);
+  if (!recent.length) { tbody.innerHTML = '<tr><td colspan="5" style="color:var(--slate);text-align:center;padding:20px">No submissions yet.</td></tr>'; return; }
+  tbody.innerHTML = recent.map(r => {
+    const isEnq = r.cargo_type === 'General enquiry';
+    const status = r.status || 'new';
+    const pill = {new:'pill-new',replied:'pill-replied',closed:'pill-closed'}[status] || 'pill-new';
+    const d = new Date(r.created_at);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 86400000);
+    const dStr = diff === 0 ? 'Today' : diff === 1 ? 'Yesterday' : d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+    const route = (r.origin && r.destination) ? r.origin.split(',')[0] + ' → ' + r.destination.split(',')[0] : (r.origin || r.destination || '—');
+    return `<tr onclick="openAdminModal(${r.id})" style="cursor:pointer">
+      <td><div style="font-weight:600;font-size:.82rem">${esc(r.full_name)}</div><div style="font-size:.72rem;color:var(--slate)">${esc(r.company_name||'')}</div></td>
+      <td style="font-size:.78rem;color:var(--slate)">${esc(route)}</td>
+      <td style="font-size:.78rem">${esc(isEnq ? 'Enquiry' : (r.cargo_type||'—'))}</td>
+      <td><span class="adm-pill ${pill}">${status}</span></td>
+      <td style="text-align:right;font-family:var(--mono);font-size:.72rem;color:var(--slate)">${dStr}</td>
+    </tr>`;
+  }).join('');
 }
 
 function adminFilterRender() {
-  const q      = (document.getElementById('admin-search').value || '').toLowerCase();
-  const type   = document.getElementById('admin-filter-type').value;
-  const period = document.getElementById('admin-filter-period').value;
+  const qEl = document.getElementById('admin-search-quotes') || document.getElementById('admin-search');
+  const q      = (qEl ? qEl.value : '').toLowerCase();
+  const type   = document.getElementById('admin-filter-type') ? document.getElementById('admin-filter-type').value : '';
+  const period = document.getElementById('admin-filter-period') ? document.getElementById('admin-filter-period').value : '';;
   const now    = new Date();
   _adminFiltered = _adminData.filter(r => {
     const hay = [r.full_name,r.email,r.phone,r.company_name,r.cargo_type,r.origin,r.destination,r.message].filter(Boolean).join(' ').toLowerCase();
